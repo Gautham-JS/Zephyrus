@@ -80,23 +80,10 @@ for frame in range(100):
                                     top_left_corner[0]=fy
                                 if fx<top_left_corner[1]:
                                     top_left_corner[1]=fx
-                                
                                 break
-                            
-                            # elif list(np.logical_and( np.logical_and(list(upref),pixcol),
-                            # np.logical_and(list(downref),pixcol)) ) == [False,False,True]:
-                            #     result_im[fy-5:fy+5,fx-5:fx+5] = np.array([0,255,0])
-
                             else:
-                                #result_im[fy:fy+10,fx:fx+10] = np.array([255,0,0])
-                                # if np.logical_and(list(upleftpix)!=pixcol, list(downrightpix)==pixcol)==1:
-                                #     result_im[fy:fy+20, fx:fx+20] = np.array([0,0,255])
                                 break
-
                         else:
-                            #result_im[fy:fy+delta,fx:fx+delta] = np.array([0,255,0])
-
-
                             break
                     except IndexError as Ind:
                         break
@@ -106,10 +93,6 @@ for frame in range(100):
     tl = [int(i) for i in top_left_corner]
     #result_im[br[0]:br[0]+20, br[1]:br[1]+20] = np.array([0,0,255])
     #result_im[tl[0]-20:tl[0], tl[1]-20:tl[1]] = np.array([0,0,255])
-    #print(top_left_corner)
-    #res_med = cv2.medianBlur(threshold,3)
-    #font = cv2.FONT_HERSHEY_SIMPLEX
-    #cam.release()
 
     cv2.rectangle(result_im,(tl[1]-delta,tl[0]-delta),(br[1]+delta,br[0]+delta), [200,255,0],5)
     cv2.putText(result_im,'Detection',(br[1]+10,br[0]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),2)
@@ -135,5 +118,7 @@ for frame in range(100):
     cv2.imshow("threshold", threshold)
     cv2.imshow("detected", result_im)
     cv2.waitKey(100)
+    
+    
 cam.release()
 cv2.destroyAllWindows()
