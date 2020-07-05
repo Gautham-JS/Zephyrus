@@ -7,18 +7,6 @@ import cv2
 import numpy as np
 import imutils
 
-"""
-threshold = np.zeros([600,600,3])
-threshold[200:400,200:400]=np.array([0,255,255])
-threshold[50:60,50:60] = np.array([0,255,255])
-threshold[225:375,225:375]=np.array([0,0,0])
-#threshold[50:100,50:100] = np.array([255,0,0])
-
-result_im = np.zeros([600,600,3])
-result_im[200:400,200:400]=np.array([0,255,255])
-result_im[50:60,50:60] = np.array([0,255,255])
-result_im[225:375,225:375]=np.array([0,0,0])
-"""
 thr = 110
 cam = cv2.VideoCapture(0)
 delta = 10
