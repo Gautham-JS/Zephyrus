@@ -1,6 +1,5 @@
 """
 @gothWare
-<<<PARTIALLY COMPLETE CODE>>>
 """
 
 
