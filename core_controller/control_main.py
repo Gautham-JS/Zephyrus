@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-#!/usr/bin/env python
 import rospy
-#from geometry_msgs.msg import Twist
-#from turtlesim.msg import Pose
 from math import pow, atan2, sqrt, sin, cos
 
 
@@ -55,13 +52,6 @@ class Quadcopter:
         self.frame_cent_y = frame.shape[1]//2
         self.cx , self.cy = Snakegate(frame,self.frame_cent_x,self.frame_cent_y)
         
-        #cv2.imshow("im",self.bridge.imgmsg_to_cv2(im))
-        #cv2.waitKey(1)
-        #print(self.bridge.imgmsg_to_cv2(im).shape)
-    
-    # def error_vector(self):
-    #     eucd = 
-
 
     def update_pose(self, data):
         ind = data.name.index('Kwad')
@@ -93,9 +83,6 @@ class Quadcopter:
 
         return f, eR, eP, eY
 
-
-        
-    
     def moveup(self,setpt):
         roll_array = []
         pitch_array = []
@@ -115,7 +102,10 @@ class Quadcopter:
         #dT = 0.1
         for i in range(500):
             t2 = t.time()
+            #dT = timeframe for velocity calc
             dT = t2-prev_t
+            
+            #ignore this section, its to fuck around with PID and tune Kp,Kd,Ki vals
             if (t2-t1)<20:
                 roll_setpt = 0
                 pitch_setpt = 0
@@ -128,18 +118,21 @@ class Quadcopter:
                 roll_setpt = 0
                 pitch_setpt = 0
                 yaw_setpt = 0
+            #stop ignoring from here
+            #checking if detection is even there or nah, if its there, the new center coord != frame center coord.
             if abs(self.frame_cent_y-self.cy)>5:
                 self.detection_Flag = True
 
-
-
+            #an error from a set height to hover at while Window is being detected
             err = (setpt -  self.pose.position.z)
 
+            #this is the main error vector we will use for control
             err_scalar = self.euclidean_distance([self.cx, self.cy], [self.frame_cent_x, self.frame_cent_y])
             err_angular = self.steering_angle([self.cx, self.cy], [self.frame_cent_x, self.frame_cent_y])
 
             print("error vector : {}".format([err_scalar,err_angular]))
 
+            #basic shit, self explanatory
             dX = self.pose.position.x - prev_x
             dY = self.pose.position.y - prev_y
             dZ = self.pose.position.z - prev_z
@@ -151,11 +144,10 @@ class Quadcopter:
             prev_z = self.pose.position.z
 
             print("Velocities are {}".format(vel_array))
-            
-
             print("PITCH SETPOINT IS {}".format(roll_setpt))
 
-
+            #here we HOVER if window not detected, else use a standard V.cos(theta), V.sin(theta) relation to set vertical velocity V
+            #V==0 iff img center==window center ie. Theta==0 ie. v.sin(theta)==0 ...thrust becomes 49, hovering setpoint, else self tune according to sine relation.
             if self.detection_Flag==True:
                 thrust = 49 - sin(err_angular)
                 if thrust>55:
@@ -170,12 +162,14 @@ class Quadcopter:
                     if abs(thrust)>55:
                         thrust = 45
 
-
-            #print("thrust is {}".format(thrust))
+            # converts Quarternion orientation system(ROS Default) to Euler orientations(roll,  pitch ,yaw), ez for processing
             (roll, pitch, yaw) = (euler_from_quaternion(self.quart))
+            
+            #this is actually OPTIONAL, FIRST line is used for controlling only R,P,Y space(slower response time, better for hover), SECOND transforms R,P,Y into Velocity domain control scheme(faster response)
             #vel_msg2, erR, erP, erY = PID(roll,pitch,yaw,vel_msg,thrust,roll_setpt,pitch_setpt,yaw_setpt)
             vel_msg2, erR, erP, erY = self.VelocityPID(vel_array[0], vel_array[1], vel_array[2] , pitch_setpt,roll_setpt,0, vel_msg, thrust)
 
+            #if yall know ROS networks, this sends the data over to drone (simulation), HMU if yall wanna run the sim for yourself(Install ROS : Melodic)
             self.motor_pub.publish(vel_msg2)
             print("THRUST IS {}".format(thrust))
             print(self.pose)
@@ -183,6 +177,7 @@ class Quadcopter:
             prev_t = t2
             yarr.append(count)
             count+=1
+            #sum lines to plot response of PID
             roll_array.append(roll)
             pitch_array.append(pitch)
             yaw_array.append(yaw)
