@@ -19,13 +19,11 @@ import time as t
 import cv2
 from cv_bridge import CvBridge
 import numpy as np
-
-
 style.use("ggplot")
 
 
-class Quadcopter:
 
+class Quadcopter:
     def __init__(self):
         rospy.init_node('quad_controller', anonymous=True)
 
