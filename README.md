@@ -25,7 +25,14 @@ The movement of the camera is estimated as well by comparing the next frame to t
 This estimated motion of the camera is coupled with the estimated depth of feature points to develop a map which progresses as the camera visits newer feature points.
 
 This gives us a final map where the feature points are mapped in a datastructure called PointCloud, the drone can access these at any time for Autonomous algorithms such as 3D A* Pathfinding.
+
+*Feature Point detection and initial depth estimationn at the start of SLAM process:*
 ![feature points and genetrated SLAM map at the start of the mapping process](/images/SlamStart.png)
+
+*Feature Point Tracking and depth Map at the End of SLAM process:*
+![feature points and genetrated SLAM map at the end of the mapping process](/images/SlamPost.png)
+
+
 
 ## Window Detection Algorithm
 The detection of the window the drones transverse through is generally done by means of a deep learning algorithm. Our system uses a lot more efficient algorithm for detection of the windows at a notable frame rate.
@@ -35,3 +42,6 @@ The detection process in our system works on **Snakegate Algorithm**. we start w
 if the length of search exceeds the threshold length, we can confirm the pixel is part of the window frame. Now we check specificaly for pixels that dont have matching pixel colors in either one of the horizontal search and either one of the vertical search, we confirm this pixel to be a corner of the frame
 
 iterating over the image for a certain tiimes, we eventually find the pixel coordinates for all 4 corners of the window
+
+*Snakegate window detection on an Image with window in a simulation:*
+![feature points and genetrated SLAM map at the end of the mapping process](/images/snakegateFrame.png)
