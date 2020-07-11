@@ -34,7 +34,7 @@ This gives us a final map where the feature points are mapped in a datastructure
 
 
 
-## Window Detection Algorithm
+## Window Detection Algorithm : 
 The detection of the window the drones transverse through is generally done by means of a deep learning algorithm. Our system uses a lot more efficient algorithm for detection of the windows at a notable frame rate.
 
 The detection process in our system works on **Snakegate Algorithm**. we start with the raw image that comes from the camera as the input, then choose a random pixel in the frame for a certain number of iterations. Every iteration, if the randomly chosen pixel matches the color of the gate specified in the competition guidelines, the algorithm proceeds searching the pixels above, below, left and right and checks if they too match the specified color. The search is stopped if the length of pixels from the starting pixel is under a set threshold(not wide enough for a window frame, probably false detection).
@@ -45,3 +45,5 @@ iterating over the image for a certain tiimes, we eventually find the pixel coor
 
 *Snakegate window detection on an Image with window in a simulation:*
 ![feature points and genetrated SLAM map at the end of the mapping process](/images/snakegateFrame.png)
+
+## Control System and Algorithm Design : 
