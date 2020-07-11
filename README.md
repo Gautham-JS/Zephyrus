@@ -25,7 +25,7 @@ The movement of the camera is estimated as well by comparing the next frame to t
 This estimated motion of the camera is coupled with the estimated depth of feature points to develop a map which progresses as the camera visits newer feature points.
 
 This gives us a final map where the feature points are mapped in a datastructure called PointCloud, the drone can access these at any time for Autonomous algorithms such as 3D A* Pathfinding.
-![GitHub Logo](images/StartSlam.png)
+![feature points and genetrated SLAM map at the start of the mapping process](/images/SlamStart.png)
 
 ## Window Detection Algorithm
 The detection of the window the drones transverse through is generally done by means of a deep learning algorithm. Our system uses a lot more efficient algorithm for detection of the windows at a notable frame rate.
