@@ -47,3 +47,32 @@ iterating over the image for a certain tiimes, we eventually find the pixel coor
 ![feature points and genetrated SLAM map at the end of the mapping process](/images/snakegateFrame.png)
 
 ## Control System and Algorithm Design : 
+The control system of the Drone aims to control the states of Roll, Pitch, Yaw, thrust and the inputs received from image processing and depth perception system that are the image center and the window detection center.
+
+The algorithm initially begins by acquiring the current states of Roll, Pitch, Yaw from the IMU to control the orientation and hence the movement of the drone in X,Y,Z direction. This movement in X,Y,Z direction is controlled again by controlling the velocities in X,Y,Z directions determined by the change in X,Y,Z values returned by the IMU.
+
+The Control is established by using standard PID controller but selecting the most ideal Setpoint for the inputs in the PID controller is the determining factor of how the drone behaves in response to any change in input and/or Setpoint. The setpoint determination is majorly dominated by the relationship established between the center of the image frame and the window detection.
+
+As long as no window gets detected, the drone transverses a zig zag pattern with scanning yaw in a Raster Scan approack by stepping the thrust. Since the competition guidelines specify the aisle to be a straight one, we will almost every time detect the window in first scan given the wide frame of the FPV drone camera we use in our hardware.
+
+The process begins by computing an Error vector between the image center at any given time and the center of the detected window. This parameter defines our Cost Function.
+
+![feature points and genetrated SLAM map at the end of the mapping process](/images/ErrorVectorEqn.png)
+
+Once the Error vector is determined, the angular parameter of this vector, theta, represents the angle of the point with respect to the horizontal axis in the Drones frame and the X axis of the image frame. This angular parameter is used to determine the values the drone needs to move in Roll(Yaxis), Pitch(Xaxis) and Thrust(Zaxis). 
+
+The Thrust or the vertical velocity is determined by using the vertical component of the vector and similarly the Roll or the Y velocity is determined by using the horizontal component of the vector. Apart from these, we need to set the forward velocity or the pitch setpoint of the drone if and only if the drone is alligned with the opening of the window. This can done either by setting the forward velocity of the drone when the error magnitude is below a certain threshold. This is however very slow in practice reducing the movement speed of the drone significantly. This is overcome by setting the pitch according to the inverse of the Magnitude of the Error vector. hence the more alligned the image frame is to the window detection, the more alligned the drone is to the window opening and the error vector has least magnitude, thus maximum forward velocity.
+
+Mathematically, this model can be represented as:
+
+![Error vec Eqns](/images/SetPointEquations.png)
+
+We use standard PID controller to adjust the next states of Roll,Pitch,Yaw,Thrust in accordance to the abovementioned relation.
+
+*The Error vector measured in a simulation containing a newly detected window at 1st Iteration:*
+![feature points and genetrated SLAM map at the end of the mapping process](/images/control_start.png)
+
+Once we have the Next states for Roll, Pitch, Yaw, Thrust, we need an algorithm to adjust the 6 motors for controlling these states. This is achieved by using a modified Quadcopter Motor Mixing controller where 4 motors are controlled with alternating rotation directions and a mapping function that maps the PID output values accordingly to the ESC limits of PWM signal. The modification is in the other 2 motors apart from the 4 motors being used to control states are solely used to control the vertical thrust in comparison to standard procedure where thrust value is coupled with every motor signal.
+
+*The control algorihm minimizing the error vector after controlling the states for Nth Iteration:*
+![feature points and genetrated SLAM map at the end of the mapping process](/images/control_final.png)
