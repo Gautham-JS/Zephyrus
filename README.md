@@ -1,8 +1,9 @@
 # Zephyrus - Drone System for Window Detection and Autonomous Control.
 This software repository contains the software frameworks and source code to the various algorithms that collectively make the system exhibit an ideal autonomous behaviour and window detection algorithm required for **Flipkarts GRID2.0 competition.**
 
-The round1:phase1 submission our team made describes a summarized working of our drone. This repository readme aims to provide a deeper insight to our system.
+![3D prototype](/images/3dmod.png)
 
+The round1:phase1 submission our team made describes a summarized working of our drone. This repository readme aims to provide a deeper insight to our system.
 
 Even though the Round1:Phase1 submission wasnt targeted to a simulation of the drone we actually decided to run a simulation consisting of a dummy drone to test out the various software algorithms on an almost practical environment, however the physical dimensions of this simulated drone isnt the same as our Proposed *Hexacopter* design. 
 
